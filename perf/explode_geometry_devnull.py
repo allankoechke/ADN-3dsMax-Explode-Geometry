@@ -84,4 +84,4 @@ def applySettings(n, addShell, shell_amount, addEditMesh, collapseNode, centerPi
 
 
 def restore_stdout():
-    sys.stdout = _original_stdout
+    sys.stdout = sys.__stdout__

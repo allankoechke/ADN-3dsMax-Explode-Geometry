@@ -24,13 +24,13 @@ if PERF_DIR not in sys.path:
 VARIANTS = [
     ("print", "explode_geometry_print"),
     ("errors_only", "explode_geometry_errors_only"),
-    ("devnull", "explode_geometry_devnull"),
     ("logger_all", "explode_geometry_logger_all"),
     ("logger_info", "explode_geometry_logger_info"),
     ("noprint", "explode_geometry_noprint"),
+    ("devnull", "explode_geometry_devnull"),
 ]
 
-CONE_PARAMS = dict(radius1=50, radius2=0, height=100, heightsegs=10, capsegs=5, sides=32)
+CONE_PARAMS = dict(radius1=300, radius2=0, height=500, heightsegs=100, capsegs=50, sides=64)
 
 
 def create_test_cone():
@@ -70,15 +70,19 @@ def main():
 
     rt.resetMaxFile(rt.Name("noPrompt"))
 
-    print("\n## Benchmark Results\n")
-    print("Test mesh: Cone(radius1={radius1}, radius2={radius2}, height={height}, "
-          "heightsegs={heightsegs}, capsegs={capsegs}, sides={sides})".format(**CONE_PARAMS))
-    print("")
-    print("| Variant | Explode Type | Time (s) |")
-    print("|---------|-------------|----------|")
+    # Reset stdout and stderr to ensure benchmark results are printed to the console
+    sys.stdout = sys.__stdout__
+    sys.stderr = sys.__stderr__
+
+    pymxs.print_("\n## Benchmark Results\n")
+    pymxs.print_("Test mesh: Cone(radius1={radius1}, radius2={radius2}, height={height}, "
+          "heightsegs={heightsegs}, capsegs={capsegs}, sides={sides})\n".format(**CONE_PARAMS))
+    pymxs.print_("\n")
+    pymxs.print_("| {:<14s} | {:<11s} | {}   |\n".format("Variant", "Explode Type", "Time (s)"))
+    pymxs.print_("|-------------|-------------|----------|\n")
     for variant_name, explode_type, elapsed in results:
-        print("| {:<14s} | {:<11s} | {:.4f}   |".format(variant_name, explode_type, elapsed))
-    print("")
+        pymxs.print_("| {:<14s} | {:<11s} | {:.4f}   |\n".format(variant_name, explode_type, elapsed))
+    pymxs.print_("\n")
 
 
 if __name__ == "__main__":
